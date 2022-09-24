@@ -50,7 +50,33 @@ max(sample(1:100, size = 50))
 ############
 
 library(tidyverse)
-library(dados)
-glimpse(dados::questionario)
 
+#O objeto url abaixo indica onde está na internet a tabela com os dados sobre municípios brasileiros
+url<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucional/main/data/dados_municipios.csv"
+
+#O comando read_csv permite ler para a sua máquina o conteúdo de uma tabela que está no endereço especificado no objeto url
+#o conteúdo da tabela é passado para o dataframe dados_municipios
+dados_municipios<- read_csv(url)
+
+dados_municipios%>%
+  filter(sigla_uf == "CE") %>%
+  select(sigla_uf,nome, populacao) %>%
+  arrange(desc(populacao))
+
+
+#O objeto url abaixo indica onde está na internet a tabela com os dados sobre municípios brasileiros
+url<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucional/main/data/dados_municipios.csv"
+
+#O comando read_csv permite ler para a sua máquina o conteúdo de uma tabela que está no endereço especificado no objeto url
+#o conteúdo da tabela é passado para o dataframe dados_municipios
+dados_municipios<- read_csv(url)
+
+
+dados_municipios%>%
+  filter(sigla_uf != "DF") %>%
+  group_by(sigla_uf) %>%
+  summarise(
+    media_populacao_municipios = mean(populacao)
+  ) %>%
+  arrange(desc(media_populacao_municipios))
 
