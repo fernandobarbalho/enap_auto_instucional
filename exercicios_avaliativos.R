@@ -119,6 +119,7 @@ dados_municipios %>%
   geom_col(aes(x=populacao, y=nome))
 
 library(dados)
+library(tidyverse)
 dados_gapminder %>%
   filter(pais=="Brasil") %>%
   ggplot()+
@@ -126,6 +127,7 @@ dados_gapminder %>%
 
 
 library(dados)
+library(tidyverse)
 dados_gapminder %>%
   filter(ano==2007) %>%
   slice_max(order_by = expectativa_de_vida, n=10) %>%
@@ -134,6 +136,7 @@ dados_gapminder %>%
   geom_col(aes(x=expectativa_de_vida, y=pais))
 
 library(dados)
+library(tidyverse)
 dados_gapminder %>%
   filter(pais=="Brasil") %>%
   ggplot()+
@@ -141,12 +144,14 @@ dados_gapminder %>%
 
 
 library(dados)
+library(tidyverse)
 dados_gapminder %>%
   filter(pais=="Brasil") %>%
   ggplot()+
   geom_line(aes(x=ano, y=expectativa_de_vida))
 
 library(dados)
+library(tidyverse)
 dados_gapminder %>%
   filter(pais=="Argentina") %>%
   ggplot()+
@@ -172,4 +177,111 @@ dados_gapminder %>%
   scale_y_continuous(breaks = c(seq(0,10,1)))+
   scale_x_log10()
 
+
+
+
+library(siconfiBD)
+library(basedosdados)
+library(tidyverse)
+
+siconfiBD::setup_siconfi(project_id = "nice-diorama-306223")
+
+pop_municipios<-basedosdados::bdplyr("br_ibge_populacao.municipio")
+
+pop_municipios<-
+pop_municipios%>%
+  dplyr::filter(ano==2020)%>%
+  basedosdados::bd_collect()
+
+gastos_perc_saude<-
+  siconfiBD::get_perc_function_exp_municipality(year=2020,gov_function = "saúde", expense_stage = "Despesas Pagas")
+
+
+#prepraração do dado
+dados_saude_municipio<-
+gastos_perc_saude %>%
+  inner_join(pop_municipios)
+
+dados_saude_municipio %>%
+  readr::write_csv("data/dados_saude_municipio.csv")
+
+#testes para verificar a viabilidade do uso em exercícios
+dados_saude_municipio%>%
+  ggplot()+
+  geom_point(aes(x=populacao, y=perc))+
+  scale_x_log10()
+
+cor(dados_saude_municipio$populacao, dados_saude_municipio$perc)
+
+cor(log10(dados_saude_municipio$populacao), dados_saude_municipio$perc)
+
+dados_saude_municipio%>%
+  ggplot()+
+  geom_point(aes(x=populacao, y=valor))+
+  scale_x_log10() +
+  scale_y_log10()
+
+cor(dados_saude_municipio$populacao, dados_saude_municipio$valor)
+
+cor(log10(dados_saude_municipio$populacao), log(dados_saude_municipio$valor))
+
+#exercícios
+
+library(tidyverse)
+
+url<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucional/main/data/dados_saude_municipio.csv"
+
+dados_saude_municipio<-
+  read_csv(url)
+
+dados_saude_municipio%>%
+  ggplot()+
+  geom_point(aes(x=populacao, y=perc))+
+  scale_x_log10()
+
+cor(log10(dados_saude_municipio$populacao), dados_saude_municipio$perc)
+
+
+
+library(tidyverse)
+
+url<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucional/main/data/dados_saude_municipio.csv"
+
+dados_saude_municipio<-
+  read_csv(url)
+
+dados_saude_municipio%>%
+  ggplot()+
+  geom_point(aes(x=populacao, y=valor))+
+  scale_x_log10() +
+  scale_y_log10()
+
+cor(log10(dados_saude_municipio$populacao), log10(dados_saude_municipio$valor))
+
+
+
+
+##Dados abertos de dados.gov.br
+
+#url do dado
+url_habitacao<- "http://sishab.mdr.gov.br/dados_abertos/_contratacoes_pcmv_pcva.csv"
+
+#download do dado a partir do endereço da url
+download.file(url = url_habitacao, destfile = "contratacoes_pcmv_pcva.csv", mode="wb")
+
+library(readr)
+library(tidyverse)
+
+#gera um dataframe a partir do arquivo csv baixado
+contratacoes_pcmv_pcva <- read_delim("contratacoes_pcmv_pcva.csv",
+                                     delim = ";", escape_double = FALSE, locale = locale(encoding = "LATIN1"),
+                                     trim_ws = TRUE) #sugestão: procure ler sobre encoding
+
+contratacoes_2021<-
+  contratacoes_pcmv_pcva %>%
+  filter(num_ano_assinatura_contrato==2021)
+
+library(questionr)
+
+questionr::freq(contratacoes_2021$txt_faixa_grupo_renda, cum = TRUE, sort = "dec", total = TRUE)
 
