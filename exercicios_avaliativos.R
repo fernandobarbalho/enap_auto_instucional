@@ -312,3 +312,126 @@ funcoes<- c("Saúde","Educação")
 Rcofog::dataTimeSeries(funcoes) %>%
   Rcofog::graphTimeSeries()
 
+
+library(microdatasus)
+library(tidyverse)
+
+
+ano_inicio<- 2020
+ano_fim <- 2020
+mes_inicio<-12
+mes_fim<-12
+estado<- "GO"
+
+#Traz dados sobre internações hospitalares: SIH-RD
+resultado<-microdatasus::fetch_datasus(year_start = ano_inicio,
+                            year_end = ano_fim,
+                            uf = estado,
+                            month_start = mes_inicio,
+                            month_end = mes_fim,
+                            information_system = "SIH-RD")
+
+dados_internacoes<- microdatasus::process_sih(resultado)
+
+dados_internacoes%>%
+  filter(COD_IDADE=="Anos")%>% #filtrar para excluir bebês que ainda não completaram um ano
+  mutate(IDADE = as.numeric(IDADE))%>%  #converte idade de variável categórica para numérica
+  ggplot() +
+  geom_boxplot(aes(x=SEXO, y=IDADE)) +
+  scale_y_continuous(breaks = seq(0,100,10))
+
+
+
+library(microdatasus)
+library(tidyverse)
+library(questionr)
+
+ano_inicio<- 2020
+ano_fim <- 2020
+mes_inicio<-12
+mes_fim<-12
+estado<- "CE"
+
+#Traz dados sobre internações hospitalares: CNES-ST
+resultado<-microdatasus::fetch_datasus(year_start = ano_inicio,
+                                       year_end = ano_fim,
+                                       uf = estado,
+                                       month_start = mes_inicio,
+                                       month_end = mes_fim,
+                                       information_system = "CNES-ST")
+
+dados_hospitais<- microdatasus::process_cnes(resultado)
+
+questionr::freq(dados_hospitais$TPGESTAO, cum = TRUE, sort = "dec", total = TRUE)
+
+
+library(tidyverse)
+
+url_dados_2021<- "https://download.inep.gov.br/dados_abertos/microdados_censo_escolar_2021.zip"
+
+download.file(url= url_dados_2021,destfile = "censo_escolar_2021.zip", mode="wb")
+
+unzip("censo_escolar_2021.zip")
+
+microdados_ed_basica_2021 <- read_delim("2021/dados/microdados_ed_basica_2021.csv",
+                                        delim = ";", escape_double = FALSE, locale = locale(encoding = "LATIN1"),
+                                        trim_ws = TRUE)
+
+microdados_ed_basica_2021 %>%
+  group_by(SG_UF) %>%
+  summarise(
+    quantidade  = n()
+  ) %>%
+  mutate(SG_UF = reorder(SG_UF, quantidade)) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_col(aes(x=quantidade, y=SG_UF)) +
+  scale_x_continuous(breaks = seq(0,35000,5000))
+
+
+library(tidyverse)
+
+url_dados_2021<- "https://download.inep.gov.br/dados_abertos/microdados_censo_escolar_2021.zip"
+
+download.file(url= url_dados_2021,destfile = "censo_escolar_2021.zip", mode="wb")
+
+unzip("censo_escolar_2021.zip")
+
+microdados_ed_basica_2021 <- read_delim("2021/dados/microdados_ed_basica_2021.csv",
+                                        delim = ";", escape_double = FALSE, locale = locale(encoding = "LATIN1"),
+                                        trim_ws = TRUE)
+
+
+
+#TP_DEPENDENCIA
+#1 - Federal
+#2 - Estadual
+#3 - Municipal
+#4 - Privada
+
+
+library(viridis)
+microdados_ed_basica_2021 %>%
+  group_by( SG_UF, TP_DEPENDENCIA) %>%
+  mutate(TP_DEPENDENCIA = as.factor(TP_DEPENDENCIA)) %>%
+  summarise(
+    quantidade  = n()
+  ) %>%
+  ungroup() %>%
+  mutate(SG_UF = reorder(SG_UF, quantidade)) %>%
+  ggplot() +
+  geom_col(aes(x=quantidade, y=SG_UF, fill= TP_DEPENDENCIA)) +
+  scale_fill_viridis(discrete = TRUE) +
+  scale_x_continuous(breaks = seq(0,35000,5000))
+
+
+
+
+library(tidyverse)
+
+url_dados_ideb<- "https://download.inep.gov.br/educacao_basica/portal_ideb/planilhas_para_download/2019/divulgacao_anos_finais_escolas_2019.zip"
+
+download.file(url= url_dados_ideb,destfile = "ideb_2019.zip", mode="wb")
+
+unzip("ideb_2019.zip")
+
