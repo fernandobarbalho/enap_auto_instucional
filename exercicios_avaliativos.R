@@ -285,3 +285,30 @@ library(questionr)
 
 questionr::freq(contratacoes_2021$txt_faixa_grupo_renda, cum = TRUE, sort = "dec", total = TRUE)
 
+
+library(rtn)
+library(tidyverse)
+
+#Códigos de contas associadas a despesas obrigatórias com controle de fluxo
+despesas_obrigatorias<- c("4.4.1.1", "4.4.1.2", "4.4.1.3","4.4.1.4","4.4.1.5" )
+
+dados<-
+  rtn::get_12_month_accumulated_account_data_by_month(despesas_obrigatorias,
+                                                      month = c(1:12), #indica que quer o valor acumulado para todos os 12 meses do ano
+                                                      match_required = FALSE) #indica que vai fazer o match sem precisar do nome completo da conta
+
+#gera valores acumulados em 12 meses para as contas selecionadas
+rtn::get_12_month_accumulated_account_data_by_month(despesas_obrigatorias,
+                                                    month = c(1:12), #indica que quer o valor acumulado para todos os 12 meses do ano
+                                                    match_required = FALSE)%>% #indica que vai fazer o match sem precisar do nome completo da conta
+  rtn::plot_rtn_series() #gera o gráfico de linha
+
+
+library(Rcofog)
+library(tidyverse)
+
+funcoes<- c("Saúde","Educação")
+
+Rcofog::dataTimeSeries(funcoes) %>%
+  Rcofog::graphTimeSeries()
+

@@ -5,6 +5,8 @@ library(tidyverse)
 #url do dado
 url_habitacao<- "http://sishab.mdr.gov.br/dados_abertos/_contratacoes_pcmv_pcva.csv"
 
+
+
 #download do dado a partir do endereço da url
 download.file(url = url_habitacao, destfile = "contratacoes_pcmv_pcva.csv", mode="wb")
 
@@ -23,6 +25,11 @@ contratacoes_pcmv_pcva%>%
     perc_entregues = (entregues/contratadas)*100 #de unidades habitacionais entregues
   ) %>%
   arrange(desc(perc_entregues))
+
+
+
+
+
 
 
 contratacoes_pcmv_pcva%>%
