@@ -425,6 +425,95 @@ microdados_ed_basica_2021 %>%
   scale_x_continuous(breaks = seq(0,35000,5000))
 
 
+library(colorspace)
+
+lvls <- names(sort(tapply(data$z == "B", data$x, mean)))
+
+my_microdados<-
+microdados_ed_basica_2021 %>%
+  mutate(IN_LIXO_SERVICO_COLETA =
+           case_when(
+             IN_LIXO_SERVICO_COLETA == 1 ~ "Tem serviço de coleta de lixo",
+             IN_LIXO_SERVICO_COLETA == 0 ~ "Sem serviço de coleta de lixo",
+             is.na(IN_LIXO_SERVICO_COLETA) ~ "Sem informação"
+           ),
+         SG_UF = as.factor(SG_UF)) %>%
+  select(SG_UF,
+         IN_LIXO_SERVICO_COLETA
+         )
+lvls <- names(sort(tapply( my_microdados$IN_LIXO_SERVICO_COLETA == "Tem serviço de coleta de lixo", my_microdados$SG_UF, mean)))
+
+microdados_ed_basica_2021 %>%
+  mutate(IN_LIXO_SERVICO_COLETA =
+           case_when(
+             IN_LIXO_SERVICO_COLETA == 1 ~ "Tem serviço de coleta de lixo",
+             IN_LIXO_SERVICO_COLETA == 0 ~ "Sem serviço de coleta de lixo",
+             is.na(IN_LIXO_SERVICO_COLETA) ~ "Sem informação"
+           )) %>%
+  group_by( SG_UF, IN_LIXO_SERVICO_COLETA) %>%
+  summarise(
+    quantidade  = n()
+  ) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_col(aes(x=quantidade, y=factor(SG_UF, levels=lvls), fill= str_wrap(IN_LIXO_SERVICO_COLETA,10)),color="#505050", position = "fill") +
+  #scale_fill_viridis(discrete = TRUE) +
+  scale_fill_discrete_qualitative(palette = "Pastel")+
+  theme_light()+
+  theme(
+    panel.background = element_rect(fill = "#15202B"),
+    panel.grid = element_blank()
+  ) +
+  labs(
+    x="",
+    y="",
+    fill= "Coleta de lixo"
+  )
+
+my_microdados<-
+microdados_ed_basica_2021 %>%
+  mutate(IN_INTERNET_APRENDIZAGEM =
+           case_when(
+             IN_INTERNET_APRENDIZAGEM == 1 ~ "Usa internet para aprendizagem",
+             IN_INTERNET_APRENDIZAGEM == 0 ~ "Não usa internet para aprendizagem",
+             is.na(IN_INTERNET_APRENDIZAGEM) ~ "Não há informação"
+           ),
+         SG_UF = as.factor(SG_UF)) %>%
+  select(SG_UF,
+         IN_INTERNET_APRENDIZAGEM
+  )
+lvls <- names(sort(tapply( my_microdados$IN_INTERNET_APRENDIZAGEM == "Usa internet para aprendizagem", my_microdados$SG_UF, mean)))
+
+
+
+microdados_ed_basica_2021 %>%
+  mutate(IN_INTERNET_APRENDIZAGEM =
+           case_when(
+             IN_INTERNET_APRENDIZAGEM == 1 ~ "Usa internet para aprendizagem",
+             IN_INTERNET_APRENDIZAGEM == 0 ~ "Não usa internet para aprendizagem",
+             is.na(IN_INTERNET_APRENDIZAGEM) ~ "Não há informação"
+           )) %>%
+  group_by( IN_INTERNET_APRENDIZAGEM, SG_UF ) %>%
+  summarise(
+    quantidade  = n()
+  ) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_col(aes(x=quantidade, y=factor(SG_UF, levels=lvls), fill= str_wrap(IN_INTERNET_APRENDIZAGEM,10)),color="#505050", position = "fill",  stat = "identity") +
+  #scale_fill_viridis(discrete = TRUE) +
+  scale_fill_discrete_qualitative(palette = "Pastel")+
+  theme_light()+
+  theme(
+    panel.background = element_rect(fill = "#15202B"),
+    panel.grid = element_blank()
+  ) +
+  labs(
+    x="",
+    y="",
+    fill= str_wrap("Internet na aprendizagem", 10)
+  )
+
+
 
 
 library(tidyverse)
