@@ -55,8 +55,3 @@ dados_municipios %>%
 
 
 
-dados_municipios %>%
-  slice_min(populacao, n=10) %>%
-  mutate(nome=reorder(nome, populacao)) %>%
-  ggplot()+
-  geom_col(aes(x=populacao, y=nome, fill=nome_regiao))

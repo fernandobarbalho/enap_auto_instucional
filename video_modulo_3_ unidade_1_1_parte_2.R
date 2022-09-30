@@ -68,4 +68,4 @@ dados_municipios%>%
   filter(sigla_uf == "CE")  %>%
   filter(populacao > 100000) %>%
   select(sigla_uf,nome, populacao) %>% #indica as colunas que devem aparecer no resultado da sequência de comandos
-  arrange(desc(populacao))
+  arrange(desc(populacao)) #ordenação em ordem decrescente de população
