@@ -4,6 +4,8 @@ arquivo<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucio
 
 dados_municipios<- read_csv(file= arquivo)
 
+dados_municipios
+
 #ggplot é uma biblioteca do pacote tidyverse que permite trabalhar com gráficos
 #Para se trabalhar com gráfico usando ggplot2 usa-se uma combinação de funções
 #uma obrigatória é a ggplot. É ela quem indica ao R que o que vem em seguir é um conjunto de isntruções sobre gráficos
@@ -36,7 +38,7 @@ dados_municipios %>%
 
 dados_municipios %>%
   slice_max(populacao, n=10) %>%
-  mutate(nome=reorder(nome, populacao)) %>% #reordena a variável nome a partir do valor da variável população
+   mutate(nome=reorder(nome, populacao)) %>% #reordena a variável nome a partir do valor da variável população
   ggplot()+
   geom_col(aes(x=populacao, y=nome))
 

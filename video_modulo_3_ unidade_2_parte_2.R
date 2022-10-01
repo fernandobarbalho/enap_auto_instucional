@@ -57,8 +57,3 @@ dados_gapminder %>%
   geom_point(aes(x=ano, y=expectativa_de_vida ))
 
 
-dados_gapminder %>%
-  filter(pais == "Brasil") %>%
-  ggplot()+
-  geom_line(aes(x=ano, y=pib_per_capita )) +
-  geom_point(aes(x=ano, y=pib_per_capita ))

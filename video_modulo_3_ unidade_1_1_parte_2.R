@@ -5,8 +5,7 @@ arquivo<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucio
 
 dados_municipios<- read_csv(file= arquivo)
 
-
-glimpse(dados_municipios)
+dados_municipios
 
 #A função filter permite fazer filtros sobre um dataframe.
 #Deve-se informar pelo menos os seguintes parâmetros:

@@ -5,6 +5,7 @@ arquivo<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucio
 
 dados_municipios<- read_csv(file= arquivo)
 
+dados_municipios
 #Para fazer agrupamentos utilizando o tidyverse utilizamos duas funções: group_by e summarise
 #Na função group_by informa-se as variáveis que queremos agrupar
 #Na função summarise informa-se operações que se deseja fazer com as variáveis agrupadsa
@@ -31,7 +32,7 @@ dados_municipios %>%
 dados_municipios %>%
   group_by(sigla_uf) %>% #Agrupa pela variável sigla_uf
   summarise(
-    quantidade_municipios = n() #soma a populacao de todos os municípios
+    quantidade_municipios = n() #quantidade de municípios
   ) %>%
   arrange(desc(quantidade_municipios)) #faz a ordenação descrescente por populacao_estado
 
@@ -49,7 +50,7 @@ dados_municipios %>%
 
 #Podemos alterar a estrutura de uma tabela usando a função mutate
 #No caso abaixo vamos criar uma nova coluna a partir da combinação das variáveis nome, siga_uf e nome_regiao_saude
-#vamos usar a função paste para fazer a concatenação de variáveis tipo texto. Vamos separar as variáveis com "-"
+#vamos usar a função paste par a fazer a concatenação de variáveis tipo texto. Vamos separar as variáveis com "-"
 
 dados_municipios %>%
   mutate(nome_regiao_saude_uf = paste(nome, nome_regiao_saude, sigla_uf, sep = "-")) %>%

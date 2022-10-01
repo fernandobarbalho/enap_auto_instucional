@@ -4,6 +4,8 @@ arquivo<- "https://raw.githubusercontent.com/fernandobarbalho/enap_auto_instucio
 
 dados_municipios<- read_csv(file= arquivo)
 
+dados_municipios
+
 #para fazer gráficos box-plot usamos a geom_boxplot
 dados_municipios%>%
   filter(nome_regiao=="Nordeste") %>%
@@ -38,11 +40,5 @@ dados_municipios%>%
   geom_histogram(aes(x=populacao), color = "white") +
   scale_x_log10()
 
-
-dados_municipios%>%
-  filter(nome_regiao=="Norte") %>%
-  ggplot()+
-  geom_histogram(aes(x=populacao), color = "white") +
-  scale_x_log10()
 
 

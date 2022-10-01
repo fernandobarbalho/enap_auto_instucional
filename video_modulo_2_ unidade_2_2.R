@@ -27,4 +27,4 @@ hospitais$rede_hospitalar
 #sort: indicação se você quer que os valores sejam ordenados em ordem crescente ("inc") ou descrescente ("dec")
 
 #Na linha abaixo geramos uma tabela de frequência sobre os dados de rede hospitalar, com frequência acumulada em ordem decrescente
-questionr::freq(x= hospitais$rede_hospitalar, cum = TRUE, sort = "inc")
+questionr::freq(x= hospitais$rede_hospitalar, cum = TRUE, sort = "dec")
